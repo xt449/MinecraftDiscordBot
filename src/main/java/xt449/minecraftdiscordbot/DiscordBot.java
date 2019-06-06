@@ -12,10 +12,14 @@ import javax.security.auth.login.LoginException;
  * All Rights Reserved
  */
 class DiscordBot {
+
+	private final MinecraftDiscordBot minecraftDiscordBot;
+
 	final JDA jda;
 	final Guild guild;
 
-	DiscordBot() {
+	DiscordBot(MinecraftDiscordBot plugin) {
+		minecraftDiscordBot = plugin;
 
 		JDA jdaTemp = null;
 		try {
@@ -36,6 +40,6 @@ class DiscordBot {
 			System.exit(1);
 		}
 
-		guild = jda.getGuildById(MinecraftDiscordBot.configDiscord.guildID);
+		guild = jda.getGuildById(minecraftDiscordBot.configDiscord.guild_id);
 	}
 }

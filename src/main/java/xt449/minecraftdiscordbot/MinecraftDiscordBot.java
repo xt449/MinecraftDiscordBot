@@ -2,16 +2,16 @@ package xt449.minecraftdiscordbot;
 
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -21,24 +21,35 @@ import java.util.stream.Collectors;
  */
 public class MinecraftDiscordBot extends JavaPlugin {
 
-	static PairsConfiguration configPairs;
-	static PendingPairsConfiguration configPendingPairs;
-	static DiscordConfiguration configDiscord;
-	private static RolesConfiguration configRoles;
+	/*static*/ PairsConfiguration configPairs;
+	/*static*/ PendingPairsConfiguration configPendingPairs;
+	/*static*/ DiscordConfiguration configDiscord;
+	private /*static*/ RolesConfiguration configRoles;
 
-	static DiscordBot discordBot;
+	/*static*/ DiscordBot discordBot;
 
-	Permission permissions;
+	private Permission permissionHook;
+	private Chat chatHook = null;
 
 	@Override
 	public final void onLoad() {
-		final RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-		if(rsp != null) {
-			permissions = rsp.getProvider();
+		final RegisteredServiceProvider<Permission> rspPermission = Bukkit.getServicesManager().getRegistration(Permission.class);
+		if(rspPermission != null) {
+			permissionHook = rspPermission.getProvider();
 		} else {
-			getLogger().severe("Error initializing Vault permissions hook!");
+			getLogger().severe("Error initializing Vault permission hook!");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
+		}
+
+		final RegisteredServiceProvider<Chat> rspChat = Bukkit.getServicesManager().getRegistration(Chat.class);
+		if(rspChat != null) {
+			chatHook = rspChat.getProvider();
+		} else {
+			getLogger().severe("Error initializing Vault chat hook!");
+			// TODO - Use permissionHook in abscence of chatHook
+			/*Bukkit.getPluginManager().disablePlugin(this);
+			return;*/
 		}
 
 		// code
@@ -52,11 +63,11 @@ public class MinecraftDiscordBot extends JavaPlugin {
 		configPendingPairs = new PendingPairsConfiguration(this);
 		configPendingPairs.initialize();
 
-		getCommand("pair").setExecutor(new MinecraftPairCommand());
+		getCommand("pair").setExecutor(new MinecraftPairCommand(this));
 
 		getCommand("syncroles").setExecutor((sender, command, label, args) -> {
 			Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-				for(final User user : luckPerms.getUsers().parallelStream().map(u -> configPairs.getDiscordUser(u.getUuid())).filter(Objects::nonNull).collect(Collectors.toList())) {
+				for(final User user : Arrays.stream(Bukkit.getOfflinePlayers()).map(player -> configPairs.getDiscordUser(player.getUniqueId())).filter(Objects::nonNull).collect(Collectors.toList())) {
 					updateUserDiscordRoles(user, true);
 				}
 
@@ -66,23 +77,17 @@ public class MinecraftDiscordBot extends JavaPlugin {
 			return true;
 		});
 
-		luckPerms = LuckPerms.getApi();
-		contextManager = luckPerms.getContextManager();
-
-		luckPerms.getEventBus().subscribe(me.lucko.luckperms.api.event.user.UserDataRecalculateEvent.class, (event) -> {
-			final net.dv8tion.jda.core.entities.User user = configPairs.getDiscordUser(event.getUser().getUuid());
-			if(user != null) {
-				updateUserDiscordRoles(user, false);
-			}
-		});
-
 		configDiscord = new DiscordConfiguration(this);
 		configDiscord.initialize();
 
-		discordBot = new DiscordBot();
+		discordBot = new DiscordBot(this);
 
 		configRoles = new RolesConfiguration(this);
 		configRoles.initialize();
+
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+
+		}, 0, 20 * 60 * 5 /*5 minutes*/);
 	}
 
 	@Override
@@ -90,18 +95,53 @@ public class MinecraftDiscordBot extends JavaPlugin {
 		discordBot.jda.shutdownNow();
 	}
 
+	/*@NotNull*/ String[] getGroups() {
+		return permissionHook.getGroups();
+	}
+
+	/*@NotNull*/ String[] getGroups(@NotNull OfflinePlayer player) {
+		return permissionHook.getPlayerGroups(null, player);
+	}
+
+	/*@NotNull*/ String getPrimaryGroup(@NotNull OfflinePlayer player) {
+		return permissionHook.getPrimaryGroup(null, player);
+	}
+
+	@SuppressWarnings("ALL")
+		/*@NotNull*/ String getGroupPrefix(@NotNull OfflinePlayer player) {
+		if(chatHook != null) {
+			String prefix = chatHook.getPlayerPrefix(null, player);
+
+			if(prefix == null) {
+				prefix = chatHook.getGroupPrefix((World) null, permissionHook.getPrimaryGroup(null, player));
+
+				if(prefix == null) {
+					if(player.isOnline()) {
+						prefix = chatHook.getPlayerPrefix(player.getPlayer());
+					}
+				}
+			}
+
+			return prefix;
+		} else {
+			return getPrimaryGroup(player);
+		}
+	}
+
 	private static Set<User> updatingUsers = new HashSet<>();
 
-	static void updateUserDiscordRoles(User user, boolean force) {
-		final OfflinePlayer minecraftPlayer = configPairs.getMinecraftPlayer(user.getId());
-		if(minecraftPlayer != null) {
-			final me.lucko.luckperms.api.User permsUser = luckPerms.getUser(minecraftPlayer.getUniqueId());
-			if(permsUser != null) {
+	void updateUserDiscordRoles(User user, boolean force) {
+		final OfflinePlayer player = configPairs.getMinecraftPlayer(user.getId());
+		if(player != null) {
+			final String prefix = getGroupPrefix(player);
+			if(prefix != null) {
 				if(updatingUsers.contains(user) || force) {
 					final Member member = discordBot.guild.getMember(user);
 
-					// Get Group Nodes
-					final List<String> groups = permsUser.getPermissions().parallelStream().filter(Node::isGroupNode).map(Node::getGroupName).collect(Collectors.toList());
+					final String group = getPrimaryGroup(player);
+
+					// Get Group Names
+					final List<String> groups = Arrays.asList(getGroups(player));
 
 					boolean nicknameChanged = false;
 
@@ -110,8 +150,8 @@ public class MinecraftDiscordBot extends JavaPlugin {
 						if(groups.contains(role.name)) {
 							discordBot.guild.getController().addSingleRoleToMember(member, discordBot.guild.getRoleById(role.id)).queue();
 
-							if(permsUser.getPrimaryGroup().equals(role.name)) {
-								discordBot.guild.getController().setNickname(member, role.group.getCachedData().getMetaData(contextManager.getStaticContexts()).getPrefix() + ' ' + member.getUser().getName()).queue();
+							if(group.equals(role.name)) {
+								discordBot.guild.getController().setNickname(member, prefix + ' ' + member.getUser().getName()).queue();
 								nicknameChanged = true;
 							}
 						} else {

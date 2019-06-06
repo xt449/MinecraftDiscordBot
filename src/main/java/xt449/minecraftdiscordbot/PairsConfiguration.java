@@ -5,7 +5,6 @@ import com.google.common.collect.HashBiMap;
 import net.dv8tion.jda.core.entities.User;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import xt449.bukkitutilitylibrary.AbstractConfiguration;
 
@@ -19,10 +18,14 @@ import java.util.stream.Collectors;
  */
 class PairsConfiguration extends AbstractConfiguration {
 
+	private final MinecraftDiscordBot minecraftDiscordBot;
+
 	BiMap<UUID, String> pairs;
 
-	PairsConfiguration(Plugin plugin) {
+	PairsConfiguration(MinecraftDiscordBot plugin) {
 		super(plugin, "pairs.db");
+
+		minecraftDiscordBot = plugin;
 	}
 
 	@Override
@@ -51,7 +54,7 @@ class PairsConfiguration extends AbstractConfiguration {
 		final String discordId = getDiscordId(id);
 		if(discordId != null) {
 			try {
-				return MinecraftDiscordBot.discordBot.jda.getUserById(discordId);
+				return minecraftDiscordBot.discordBot.jda.getUserById(discordId);
 			} catch(NullPointerException exc) {
 				return null;
 			}
@@ -87,7 +90,7 @@ class PairsConfiguration extends AbstractConfiguration {
 		pairs.put(player.getUniqueId(), user.getId());
 		config.set(player.getUniqueId().toString(), user.getId());
 
-		MinecraftDiscordBot.updateUserDiscordRoles(user, true);
+		minecraftDiscordBot.updateUserDiscordRoles(user, true);
 
 		save();
 		//readValues();

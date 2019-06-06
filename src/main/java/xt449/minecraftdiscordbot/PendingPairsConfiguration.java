@@ -2,7 +2,6 @@ package xt449.minecraftdiscordbot;
 
 import net.dv8tion.jda.core.entities.User;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.Plugin;
 import xt449.bukkitutilitylibrary.AbstractConfiguration;
 
 import java.util.Map;
@@ -19,11 +18,15 @@ class PendingPairsConfiguration extends AbstractConfiguration {
 	private final String path_discord_pairs = "discord";
 	private final String path_minecraft_pairs = "minecraft";
 
+	private final MinecraftDiscordBot minecraftDiscordBot;
+
 	private Map<String, UUID> discord_pairs;
 	private Map<UUID, String> minecraft_pairs;
 
-	PendingPairsConfiguration(Plugin plugin) {
+	PendingPairsConfiguration(MinecraftDiscordBot plugin) {
 		super(plugin, "pending.db");
+
+		minecraftDiscordBot = plugin;
 	}
 
 	@Override
@@ -43,7 +46,7 @@ class PendingPairsConfiguration extends AbstractConfiguration {
 		final String userID = user.getId();
 
 		if(discord_pairs.containsKey(userID) && discord_pairs.get(userID).equals(playerID)) {
-			MinecraftDiscordBot.configPairs.pair(player, user);
+			minecraftDiscordBot.configPairs.pair(player, user);
 			config.getConfigurationSection(path_discord_pairs).set(userID, null);
 			discord_pairs.remove(userID);
 			save();
@@ -64,7 +67,7 @@ class PendingPairsConfiguration extends AbstractConfiguration {
 		final String userID = user.getId();
 
 		if(minecraft_pairs.containsKey(playerID) && minecraft_pairs.get(playerID).equals(userID)) {
-			MinecraftDiscordBot.configPairs.pair(player, user);
+			minecraftDiscordBot.configPairs.pair(player, user);
 			config.getConfigurationSection(path_minecraft_pairs).set(playerID.toString(), null);
 			minecraft_pairs.remove(playerID);
 			save();

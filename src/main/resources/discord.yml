@@ -1,2 +1,9 @@
-command prefix: '?'
-guild id: 563608602234060802
+bot:
+  token: ''
+  status: 'playing on {ip}'
+
+guild:
+  id: 148130906555547648
+
+command:
+  prefix: '?'

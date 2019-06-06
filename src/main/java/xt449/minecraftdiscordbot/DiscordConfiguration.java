@@ -13,11 +13,15 @@ import java.io.InputStreamReader;
  */
 class DiscordConfiguration extends AbstractConfiguration {
 
-	private final String path_commandPrefix = "command prefix";
-	private final String path_guildId = "guild id";
+	private final String bot_token_path = "bot.token";
+	private final String bot_status_path = "bot.status";
+	private final String command_prefix_path = "command.prefix";
+	private final String guild_id_path = "guild.id";
 
-	String commandPrefix /*= "!"*/;
-	long guildID;
+	String bot_token;
+	String bot_status;
+	String command_prefix;
+	long guild_id;
 
 	DiscordConfiguration(Plugin plugin) {
 		super(plugin, "discord.yml");
@@ -30,7 +34,9 @@ class DiscordConfiguration extends AbstractConfiguration {
 
 	@Override
 	public void getValues() {
-		commandPrefix = config.getString(path_commandPrefix);
-		guildID = config.getLong(path_guildId);
+		bot_token = config.getString(bot_token_path);
+		bot_status = config.getString(bot_status_path);
+		command_prefix = config.getString(command_prefix_path);
+		guild_id = config.getLong(guild_id_path);
 	}
 }

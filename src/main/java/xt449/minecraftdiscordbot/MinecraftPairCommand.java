@@ -14,6 +14,12 @@ import org.bukkit.entity.Player;
  */
 class MinecraftPairCommand implements CommandExecutor {
 
+	private final MinecraftDiscordBot minecraftDiscordBot;
+
+	MinecraftPairCommand(MinecraftDiscordBot plugin) {
+		minecraftDiscordBot = plugin;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(sender instanceof Player) {
@@ -23,21 +29,21 @@ class MinecraftPairCommand implements CommandExecutor {
 					return false;
 				}
 
-				for(User user : MinecraftDiscordBot.discordBot.jda.getUsersByName(tag[0], true)) {
+				for(User user : minecraftDiscordBot.discordBot.jda.getUsersByName(tag[0], true)) {
 					if(user.getDiscriminator().equalsIgnoreCase(tag[1])) {
 						Player player = (Player) sender;
 
-						if(MinecraftDiscordBot.configPairs.pairs.containsKey(player.getUniqueId())) {
+						if(minecraftDiscordBot.configPairs.pairs.containsKey(player.getUniqueId())) {
 							sender.sendMessage(ChatColor.GOLD + "Your Discord and Minecraft accounts are already paired!");
 							return true;
 						}
 
-						boolean complete = MinecraftDiscordBot.configPendingPairs.pairFromMinecraft(player, user);
+						boolean complete = minecraftDiscordBot.configPendingPairs.pairFromMinecraft(player, user);
 
 						if(complete) {
 							sender.sendMessage(ChatColor.GREEN + "Your Discord and Minecraft accounts are now paired!");
 						} else {
-							sender.sendMessage(ChatColor.AQUA + "Finish pairing your accounts by using " + MinecraftDiscordBot.configDiscord.commandPrefix + "pair " + player.getName() + " on the Minecraft server!");
+							sender.sendMessage(ChatColor.AQUA + "Finish pairing your accounts by using " + minecraftDiscordBot.configDiscord.command_prefix + "pair " + player.getName() + " on the Minecraft server!");
 						}
 
 						return true;
