@@ -1,0 +1,28 @@
+# @author xt449
+# Copyright BinaryBanana/xt449 2019
+# All Rights Reserved
+
+main: ${project.groupId}.${project.artifactId}.${project.name}
+name: ${project.name}
+version: ${project.version}
+load: STARTUP
+author: xt449
+api-version: '1.14'
+depend: [Vault]
+
+permissions:
+  minecraftdiscordbot.command.pair:
+    default: true
+  minecraftdiscordbot.command.forcesyncroles:
+    default: op
+
+commands:
+  pair:
+    description: Pair your Minecraft and Discord accounts.
+    usage: /<command> <Discord username#discriminator>
+    permission: minecraftdiscordbot.command.pair
+  forcesyncroles:
+    aliases: [forcesync, syncroles]
+    description: Force sync all Discord roles for users with paired accounts.
+    usage: /<command>
+    permission: minecraftdiscordbot.command.forcesyncroles
