@@ -1,7 +1,7 @@
 package xt449.minecraftdiscordbot;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -138,6 +138,11 @@ public class MinecraftDiscordBot extends JavaPlugin {
 				if(updatingUsers.contains(user) || force) {
 					final Member member = discordBot.guild.getMember(user);
 
+					if(member == null) {
+						Bukkit.getLogger().severe("MinecraftDiscordBot: Invalid user member (" + user.getId() + ")!");
+						return;
+					}
+
 					final String group = getPrimaryGroup(player);
 
 					// Get Group Names
@@ -147,20 +152,27 @@ public class MinecraftDiscordBot extends JavaPlugin {
 
 					// Remove roles
 					for(final Role role : configRoles.roles) {
+						final net.dv8tion.jda.api.entities.Role discordRole = discordBot.guild.getRoleById(role.id);
+
+						if(discordRole == null) {
+							Bukkit.getLogger().severe("MinecraftDiscordBot: Invalid role ID (" + role.id + ")!");
+							continue;
+						}
+
 						if(groups.contains(role.name)) {
-							discordBot.guild.getController().addSingleRoleToMember(member, discordBot.guild.getRoleById(role.id)).queue();
+							discordBot.guild.addRoleToMember(member, discordRole).queue();
 
 							if(group.equals(role.name)) {
-								discordBot.guild.getController().setNickname(member, prefix + ' ' + member.getUser().getName()).queue();
+								discordBot.guild.modifyNickname(member, prefix + ' ' + member.getUser().getName()).queue();
 								nicknameChanged = true;
 							}
 						} else {
-							discordBot.guild.getController().removeSingleRoleFromMember(member, discordBot.guild.getRoleById(role.id)).queue();
+							discordBot.guild.removeRoleFromMember(member, discordRole).queue();
 						}
 					}
 
 					if(!nicknameChanged) {
-						discordBot.guild.getController().setNickname(member, null).queue();
+						discordBot.guild.modifyNickname(member, null).queue();
 					}
 
 					updatingUsers.remove(user);

@@ -30,7 +30,7 @@ class RolesConfiguration extends AbstractConfiguration {
 	public void setDefaults() {
 		for(String group : minecraftDiscordBot.getGroups()) {
 			if(config.get(group) == null) {
-				final List<net.dv8tion.jda.core.entities.Role> discordRoles = minecraftDiscordBot.discordBot.guild.getRolesByName(group, true);
+				final List<net.dv8tion.jda.api.entities.Role> discordRoles = minecraftDiscordBot.discordBot.guild.getRolesByName(group, true);
 				if(discordRoles.size() > 0) {
 					config.addDefault(group + '.' + path_id, discordRoles.get(0).getIdLong());
 				}
