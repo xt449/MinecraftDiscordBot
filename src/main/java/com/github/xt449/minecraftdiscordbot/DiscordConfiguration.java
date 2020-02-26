@@ -1,8 +1,8 @@
-package xt449.minecraftdiscordbot;
+package com.github.xt449.minecraftdiscordbot;
 
+import com.github.xt449.bukkitutilitylibrary.AbstractConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import xt449.bukkitutilitylibrary.AbstractConfiguration;
 
 import java.io.InputStreamReader;
 

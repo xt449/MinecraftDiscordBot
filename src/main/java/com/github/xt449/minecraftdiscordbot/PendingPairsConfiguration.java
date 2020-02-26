@@ -1,8 +1,8 @@
-package xt449.minecraftdiscordbot;
+package com.github.xt449.minecraftdiscordbot;
 
+import com.github.xt449.bukkitutilitylibrary.AbstractConfiguration;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.OfflinePlayer;
-import xt449.bukkitutilitylibrary.AbstractConfiguration;
 
 import java.util.Map;
 import java.util.UUID;

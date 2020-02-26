@@ -1,12 +1,12 @@
-package xt449.minecraftdiscordbot;
+package com.github.xt449.minecraftdiscordbot;
 
+import com.github.xt449.bukkitutilitylibrary.AbstractConfiguration;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.Nullable;
-import xt449.bukkitutilitylibrary.AbstractConfiguration;
 
 import java.util.UUID;
 import java.util.stream.Collectors;

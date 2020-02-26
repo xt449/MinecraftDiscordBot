@@ -1,4 +1,4 @@
-package xt449.minecraftdiscordbot;
+package com.github.xt449.minecraftdiscordbot;
 
 /**
  * @author xt449

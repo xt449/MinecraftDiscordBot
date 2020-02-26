@@ -1,4 +1,4 @@
-package xt449.minecraftdiscordbot;
+package com.github.xt449.minecraftdiscordbot;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -107,8 +107,7 @@ public class MinecraftDiscordBot extends JavaPlugin {
 		return permissionHook.getPrimaryGroup(null, player);
 	}
 
-	@SuppressWarnings("ALL")
-		/*@NotNull*/ String getGroupPrefix(@NotNull OfflinePlayer player) {
+	/*@NotNull*/ String getGroupPrefix(@NotNull OfflinePlayer player) {
 		if(chatHook != null) {
 			String prefix = chatHook.getPlayerPrefix(null, player);
 

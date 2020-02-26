@@ -1,9 +1,9 @@
 bot:
-  token: ''
+  token: '<your bot token here>'
   status: 'playing on {ip}'
 
 guild:
-  id: 148130906555547648
+  id: <your server id here>
 
 command:
   prefix: '?'

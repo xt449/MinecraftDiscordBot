@@ -1,6 +1,6 @@
-package xt449.minecraftdiscordbot;
+package com.github.xt449.minecraftdiscordbot;
 
-import xt449.bukkitutilitylibrary.AbstractConfiguration;
+import com.github.xt449.bukkitutilitylibrary.AbstractConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package xt449.minecraftdiscordbot;
+package com.github.xt449.minecraftdiscordbot;
 
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.ChatColor;

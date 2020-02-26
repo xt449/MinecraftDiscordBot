@@ -1,4 +1,4 @@
-package xt449.minecraftdiscordbot;
+package com.github.xt449.minecraftdiscordbot;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -23,8 +23,7 @@ class DiscordBot {
 
 		JDA jdaTemp = null;
 		try {
-			jdaTemp = new JDABuilder("")
-					.build();
+			jdaTemp = new JDABuilder("").build();
 		} catch(LoginException exc) {
 			exc.printStackTrace();
 			System.out.println("Unable to connect to Discord API. Bot Token is invalid or the servers are offline!");
