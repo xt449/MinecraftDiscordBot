@@ -11,26 +11,22 @@ import org.bukkit.entity.Player;
  */
 abstract class MinecraftLinkCommand {
 
-	public static boolean execute(CommandSender sender, Command command, String alias, String[] args) {
+	static boolean execute(CommandSender sender, Command command, String alias, String[] args) {
 		if(sender instanceof Player) {
 			if(args.length > 0) {
-				try {
-					final User user = DiscordBot.jda.getUserByTag(args[0]);
+				final User user = DiscordBot.jda.getUserByTag(String.join(" ", args));
 
-					if(user == null) {
-						throw new IllegalArgumentException();
-					}
-
-					if(AccountLinking.beginLinking(((Player) sender).getUniqueId(), user.getId())) {
-						user.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("Are you " + sender.getName() + "?\nUse the command `/link " + ((Player) sender).getUniqueId().toString() + "` in <#743810987714543676> to complete linking!").queue());
-						sender.sendMessage("Confirmation message sent to discord!");
-					} else {
-						sender.sendMessage("Accounts already linked!");
-					}
-				} catch(IllegalArgumentException exc) {
-					sender.sendMessage(ChatColor.GRAY + "Invalid Discord tag!");
+				if(user == null) {
+					sender.sendMessage(ChatColor.GOLD + "Invalid Discord tag!");
+					return true;
 				}
-				return true;
+
+				if(AccountLinking.beginLinking(((Player) sender).getUniqueId(), user.getId())) {
+					user.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("Did you just begin linking your Discord and Minecraft accounts?\nReply to this with the username of your Minecraft account to complete linking!\n(Note: You must be currently logged onto the server to confirm the account linking.)").queue());
+					sender.sendMessage(ChatColor.GREEN + "Confirmation message sent to discord!");
+				} else {
+					sender.sendMessage(ChatColor.GOLD + "Accounts already linked!");
+				}
 			} else {
 				return false;
 			}

@@ -1,26 +1,31 @@
 package com.github.xt449.minecraftdiscordbot;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author xt449 / BinaryBanana
  */
-public class MinecraftDiscordBot extends JavaPlugin {
+public class MinecraftDiscordBot extends JavaPlugin implements Listener {
 
-	static DiscordConfiguration configDiscord;
+	private RegisteredListener listener;
 
 	@Override
 	public final void onEnable() {
-		configDiscord = new DiscordConfiguration(this);
-		configDiscord.initialize();
+		final DiscordConfiguration config = new DiscordConfiguration(this);
+		config.initialize();
+		DiscordBot.initialize(config.token, config.guildID, config.commandPrefix);
 
-		DiscordBot.initialize();
+		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 	}
 
 	@Override
 	public final void onDisable() {
+		AccountLinking.save();
 		DiscordBot.jda.shutdown();
 	}
 

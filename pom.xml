@@ -6,7 +6,7 @@
 
     <groupId>com.github.xt449</groupId>
     <artifactId>minecraftdiscordbot</artifactId>
-    <version>${minecraft.version}-0.1.1</version>
+    <version>${minecraft.version}-1.0.0</version>
     <name>MinecraftDiscordBot</name>
 
     <properties>
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_208</version>
+            <version>4.2.0_209</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>

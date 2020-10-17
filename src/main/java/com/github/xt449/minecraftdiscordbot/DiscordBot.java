@@ -2,7 +2,14 @@ package com.github.xt449.minecraftdiscordbot;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import org.bukkit.Bukkit;
 
 import javax.security.auth.login.LoginException;
 
@@ -11,19 +18,29 @@ import javax.security.auth.login.LoginException;
  */
 abstract class DiscordBot {
 
-	//static final char COMMAND_PREFIX = '/';
+	static String commandPrefix;
 	static JDA jda;
 	static Guild guild;
 
-	static void initialize() {
+	static void initialize(String token, long guildId, String commandPrefix) {
+		DiscordBot.commandPrefix = commandPrefix;
+
+		final String version = Bukkit.getBukkitVersion();
+
 		try {
-			jda = JDABuilder.createDefault("NTY5MTcwODEwODYyOTYwNjQw.XMI8IA.gElso5XPEYE47FZ_EvZPa-q-0Pg")
+			jda = JDABuilder.createDefault(token)
+					.enableIntents(GatewayIntent.GUILD_MEMBERS)
+					.setMemberCachePolicy(MemberCachePolicy.ALL)
+					.addEventListeners(listener)
+					.setActivity(Activity.playing(version.substring(0, version.indexOf('-'))))
 					.build();
 		} catch(LoginException exc) {
 			exc.printStackTrace();
 			System.out.println("Unable to connect to Discord API. Bot Token is invalid or the servers are offline!");
 			System.exit(1);
 		}
+
+		AccountLinking.load();
 
 		try {
 			jda.awaitReady();
@@ -32,6 +49,18 @@ abstract class DiscordBot {
 			System.exit(1);
 		}
 
-		guild = jda.getGuildById(MinecraftDiscordBot.configDiscord.guildID);
+		guild = jda.getGuildById(guildId);
 	}
+
+	private static final ListenerAdapter listener = new ListenerAdapter() {
+		@Override
+		public void onPrivateMessageReceived(PrivateMessageReceivedEvent event) {
+			DiscordLinkCommand.execute(event);
+		}
+
+		@Override
+		public void onGuildReady(GuildReadyEvent event) {
+			event.getGuild().loadMembers().onSuccess(list -> System.out.println("Discord Guild Member list cached!"));
+		}
+	};
 }
