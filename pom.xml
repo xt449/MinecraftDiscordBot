@@ -23,6 +23,11 @@
             <id>jcenter-repo</id>
             <url>https://jcenter.bintray.com/</url>
         </repository>
+
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/xt449/${project.artifactId}/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -53,6 +58,13 @@
             </exclusions>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/xt449/${project.artifactId}/</url>
+        </repository>
+    </distributionManagement>
 
     <build>
         <resources>
