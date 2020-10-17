@@ -1,42 +1,26 @@
 package com.github.xt449.minecraftdiscordbot;
 
-import com.github.xt449.bukkitutilitylibrary.AbstractConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import com.github.xt449.spigotutilitylibrary.AbstractConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import java.io.InputStreamReader;
-
 /**
- * @author xt449
- * Copyright BinaryBanana/xt449 2019
- * All Rights Reserved
+ * @author xt449 / BinaryBanana
  */
 class DiscordConfiguration extends AbstractConfiguration {
 
-	private final String bot_token_path = "bot.token";
-	private final String bot_status_path = "bot.status";
-	private final String command_prefix_path = "command.prefix";
-	private final String guild_id_path = "guild.id";
+	private final String path_commandPrefix = "command prefix";
+	private final String path_guildId = "guild id";
 
-	String bot_token;
-	String bot_status;
-	String command_prefix;
-	long guild_id;
+	String commandPrefix;
+	long guildID;
 
 	DiscordConfiguration(Plugin plugin) {
 		super(plugin, "discord.yml");
 	}
 
 	@Override
-	public void setDefaults() {
-		config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(filePath))));
-	}
-
-	@Override
-	public void getValues() {
-		bot_token = config.getString(bot_token_path);
-		bot_status = config.getString(bot_status_path);
-		command_prefix = config.getString(command_prefix_path);
-		guild_id = config.getLong(guild_id_path);
+	public void readValues() {
+		commandPrefix = config.getString(path_commandPrefix);
+		guildID = config.getLong(path_guildId);
 	}
 }
