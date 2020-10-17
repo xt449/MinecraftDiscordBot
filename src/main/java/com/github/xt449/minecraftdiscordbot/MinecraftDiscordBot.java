@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -12,13 +11,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class MinecraftDiscordBot extends JavaPlugin implements Listener {
 
-	private RegisteredListener listener;
-
 	@Override
 	public final void onEnable() {
 		final DiscordConfiguration config = new DiscordConfiguration(this);
 		config.initialize();
-		DiscordBot.initialize(config.token, config.guildID, config.commandPrefix);
+		DiscordBot.initialize(config.token, config.guildID, config.inviteLink, config.commandPrefix);
 
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 	}

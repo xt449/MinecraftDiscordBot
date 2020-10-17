@@ -18,11 +18,13 @@ import javax.security.auth.login.LoginException;
  */
 abstract class DiscordBot {
 
+	static String inviteLink;
 	static String commandPrefix;
 	static JDA jda;
 	static Guild guild;
 
-	static void initialize(String token, long guildId, String commandPrefix) {
+	static void initialize(String token, long guildId, String inviteLink, String commandPrefix) {
+		DiscordBot.inviteLink = inviteLink;
 		DiscordBot.commandPrefix = commandPrefix;
 
 		final String version = Bukkit.getBukkitVersion();
