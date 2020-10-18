@@ -114,6 +114,6 @@ public class PlayerListener implements Listener {
 	}
 
 	private void sendRejoinMessage(Player player) {
-		player.sendMessage(ChatColor.RED + "Your linked Discord account is not in the server.\nPlease rejoin the Discord server to regain access.");
+		player.sendMessage(ChatColor.RED + "Your linked Discord account is not in the server!\nPlease rejoin the Discord server @ " + ChatColor.AQUA + DiscordBot.inviteLink + ChatColor.YELLOW + " to regain access");
 	}
 }
