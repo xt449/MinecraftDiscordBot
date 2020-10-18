@@ -22,8 +22,10 @@ public class PlayerListener implements Listener {
 	private void onPlayerJoin(PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
 
-		if(!AccountLinking.hasLink(player.getUniqueId()) || DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+		if(!AccountLinking.hasLink(player.getUniqueId())) {
 			sendLinkingMessage(player);
+		} else if(DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+			sendRejoinMessage(player);
 		}
 	}
 
@@ -54,8 +56,12 @@ public class PlayerListener implements Listener {
 	private void onPlayerAnimation(PlayerAnimationEvent event) {
 		final Player player = event.getPlayer();
 
-		if(!AccountLinking.hasLink(player.getUniqueId()) || DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+		if(!AccountLinking.hasLink(player.getUniqueId())) {
 			sendLinkingMessage(player);
+
+			event.setCancelled(true);
+		} else if(DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+			sendRejoinMessage(player);
 
 			event.setCancelled(true);
 		}
@@ -65,12 +71,22 @@ public class PlayerListener implements Listener {
 	private void onPlayerMove(PlayerMoveEvent event) {
 		final Player player = event.getPlayer();
 
-		if(!AccountLinking.hasLink(player.getUniqueId()) || DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+		if(!AccountLinking.hasLink(player.getUniqueId())) {
 			final Location to = event.getTo();
 			if(to != null) {
 				final Location from = event.getFrom();
 				if((int) from.getX() - (int) to.getX() != 0 || (int) from.getZ() - (int) to.getZ() != 0) {
 					sendLinkingMessage(player);
+
+					event.setCancelled(true);
+				}
+			}
+		} else if(DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+			final Location to = event.getTo();
+			if(to != null) {
+				final Location from = event.getFrom();
+				if((int) from.getX() - (int) to.getX() != 0 || (int) from.getZ() - (int) to.getZ() != 0) {
+					sendRejoinMessage(player);
 
 					event.setCancelled(true);
 				}
@@ -82,15 +98,19 @@ public class PlayerListener implements Listener {
 	private void onPlayerInteract(PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
 
-		if(!AccountLinking.hasLink(player.getUniqueId()) || DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+		if(!AccountLinking.hasLink(player.getUniqueId())) {
 			sendLinkingMessage(player);
+
+			event.setCancelled(true);
+		} else if(DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+			sendRejoinMessage(player);
 
 			event.setCancelled(true);
 		}
 	}
 
 	private void sendLinkingMessage(Player player) {
-		player.sendMessage(ChatColor.YELLOW + "To begin linking your Discord and Minecraft accounts, join the Discord server @ " + DiscordBot.inviteLink + " and then run the command " + ChatColor.AQUA + "/link <discord username#tag>" + ChatColor.GRAY + "\n(ie: /link xt449#8551)");
+		player.sendMessage(ChatColor.YELLOW + "To begin linking your Discord and Minecraft accounts, join the Discord server @ " + ChatColor.AQUA + DiscordBot.inviteLink + ChatColor.YELLOW + " and then run the command " + ChatColor.AQUA + "/link <discord username#tag>" + ChatColor.GRAY + "\n(ie: /link xt449#8551)");
 	}
 
 	private void sendRejoinMessage(Player player) {
