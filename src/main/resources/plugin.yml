@@ -8,6 +8,8 @@ api-version: '1.16'
 permissions:
   minecraftdiscordbot.command.link:
     default: true
+  minecraftdiscordbot.command.whois:
+    default: true
 #  minecraftdiscordbot.command.syncroles:
 #    default: op
 
@@ -17,6 +19,11 @@ commands:
     description: Link your Minecraft and Discord accounts.
     usage: /<command> <discord username#tag>
     permission: minecraftdiscordbot.command.link
+  whois:
+    aliases: [who]
+    description: Get the Discord tag of a player
+    usage: /<command> <player>
+    permission: minecraftdiscordbot.command.whois
 #  syncroles:
 #    aliases: [forcesync]
 #    description: Force a update of all Discord roles for users with paired accounts.

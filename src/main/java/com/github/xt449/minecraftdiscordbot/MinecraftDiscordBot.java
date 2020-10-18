@@ -30,6 +30,8 @@ public class MinecraftDiscordBot extends JavaPlugin implements Listener {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if("link".equals(command.getName())) {
 			return MinecraftLinkCommand.execute(sender, command, label, args);
+		} else if("whois".equals(command.getName())) {
+			return MinecraftWhoisCommand.execute(sender, command, label, args);
 		}
 
 		return false;
