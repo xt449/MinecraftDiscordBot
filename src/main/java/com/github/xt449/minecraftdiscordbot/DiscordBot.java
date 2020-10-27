@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.util.UUID;
@@ -71,7 +70,7 @@ abstract class DiscordBot {
 		}
 
 		@Override
-		public void onGuildBan(@NotNull GuildBanEvent event) {
+		public void onGuildBan(GuildBanEvent event) {
 			final UUID uuid = AccountLinking.getMinecraftLink(event.getUser().getId());
 
 			if(uuid != null) {
