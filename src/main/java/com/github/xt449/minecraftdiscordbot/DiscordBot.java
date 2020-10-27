@@ -4,14 +4,19 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import org.bukkit.BanList;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
+import java.util.UUID;
 
 /**
  * @author xt449 / BinaryBanana
@@ -63,6 +68,20 @@ abstract class DiscordBot {
 		@Override
 		public void onGuildReady(GuildReadyEvent event) {
 			event.getGuild().loadMembers().onSuccess(list -> System.out.println("Discord Guild Member list cached!"));
+		}
+
+		@Override
+		public void onGuildBan(@NotNull GuildBanEvent event) {
+			final UUID uuid = AccountLinking.getMinecraftLink(event.getUser().getId());
+
+			if(uuid != null) {
+				final Player player = Bukkit.getPlayer(uuid);
+
+				if(player != null) {
+					Bukkit.getBanList(BanList.Type.NAME).addBan(player.getName(), "Linked Discord account has been banned!", null, "Linked Account Ban");
+					player.kickPlayer("Linked Discord account has been banned!");
+				}
+			}
 		}
 	};
 }
