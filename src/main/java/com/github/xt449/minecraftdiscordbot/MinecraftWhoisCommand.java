@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * @author xt449 / BinaryBanana
+ * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
 abstract class MinecraftWhoisCommand {
 
@@ -21,7 +21,7 @@ abstract class MinecraftWhoisCommand {
 				return true;
 			}
 
-			final User user = DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId()));
+			final User user = DiscordBot.jda.getUserById(AccountLinking.getLink(player.getUniqueId()));
 
 			if(user == null) {
 				sender.sendMessage(ChatColor.GOLD + "This user is no longer part of the Discord server");

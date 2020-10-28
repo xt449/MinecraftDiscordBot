@@ -4,7 +4,7 @@ import com.github.xt449.spigotutilitylibrary.AbstractConfiguration;
 import org.bukkit.plugin.Plugin;
 
 /**
- * @author xt449 / BinaryBanana
+ * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
 class DiscordConfiguration extends AbstractConfiguration {
 

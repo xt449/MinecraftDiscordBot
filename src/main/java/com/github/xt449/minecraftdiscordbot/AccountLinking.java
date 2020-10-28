@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * @author xt449 / BinaryBanana
+ * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
 abstract class AccountLinking {
 
@@ -65,12 +65,20 @@ abstract class AccountLinking {
 		}
 	}
 
-	public static String getDiscordLink(UUID uuid) {
+	public static String getLink(UUID uuid) {
 		return links.get(uuid);
 	}
 
-	public static UUID getMinecraftLink(String discordId) {
+	public static UUID getLink(String discordId) {
 		return links.inverse().get(discordId);
+	}
+
+	public static boolean hasLink(UUID uuid) {
+		return links.containsKey(uuid);
+	}
+
+	public static boolean hasLink(String id) {
+		return links.inverse().containsKey(id);
 	}
 
 	/**
@@ -97,13 +105,5 @@ abstract class AccountLinking {
 			return true;
 		}
 		return false;
-	}
-
-	public static boolean hasLink(UUID uuid) {
-		return links.containsKey(uuid);
-	}
-
-	public static boolean hasLink(String id) {
-		return links.containsValue(id);
 	}
 }

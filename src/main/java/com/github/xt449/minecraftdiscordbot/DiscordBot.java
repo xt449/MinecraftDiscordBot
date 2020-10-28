@@ -18,16 +18,18 @@ import javax.security.auth.login.LoginException;
 import java.util.UUID;
 
 /**
- * @author xt449 / BinaryBanana
+ * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
-abstract class DiscordBot {
+public abstract class DiscordBot {
 
+	static long guildId;
 	static String inviteLink;
 	static String commandPrefix;
 	static JDA jda;
 	static Guild guild;
 
 	static void initialize(String token, long guildId, String inviteLink, String commandPrefix) {
+		DiscordBot.guildId = guildId;
 		DiscordBot.inviteLink = inviteLink;
 		DiscordBot.commandPrefix = commandPrefix;
 
@@ -45,9 +47,9 @@ abstract class DiscordBot {
 			System.out.println("Unable to connect to Discord API. Bot Token is invalid or the servers are offline!");
 			System.exit(1);
 		}
+	}
 
-		AccountLinking.load();
-
+	static void start() {
 		try {
 			jda.awaitReady();
 		} catch(InterruptedException exc) {
@@ -71,7 +73,7 @@ abstract class DiscordBot {
 
 		@Override
 		public void onGuildBan(GuildBanEvent event) {
-			final UUID uuid = AccountLinking.getMinecraftLink(event.getUser().getId());
+			final UUID uuid = AccountLinking.getLink(event.getUser().getId());
 
 			if(uuid != null) {
 				final Player player = Bukkit.getPlayer(uuid);
@@ -83,4 +85,12 @@ abstract class DiscordBot {
 			}
 		}
 	};
+
+	public static JDA getJDA() {
+		return jda;
+	}
+
+	public static Guild getGuild() {
+		return guild;
+	}
 }

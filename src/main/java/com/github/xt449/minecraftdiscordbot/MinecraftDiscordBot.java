@@ -7,15 +7,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @author xt449 / BinaryBanana
+ * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
 public class MinecraftDiscordBot extends JavaPlugin implements Listener {
 
 	@Override
-	public final void onEnable() {
+	public void onLoad() {
 		final DiscordConfiguration config = new DiscordConfiguration(this);
 		config.initialize();
 		DiscordBot.initialize(config.token, config.guildID, config.inviteLink, config.commandPrefix);
+	}
+
+	@Override
+	public final void onEnable() {
+		AccountLinking.load();
+
+		DiscordBot.start();
 
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 	}

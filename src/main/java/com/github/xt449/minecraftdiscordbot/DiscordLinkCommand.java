@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
- * @author xt449 / BinaryBanana
+ * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
 abstract class DiscordLinkCommand {
 

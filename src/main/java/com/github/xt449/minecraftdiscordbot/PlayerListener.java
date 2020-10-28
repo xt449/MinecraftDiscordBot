@@ -9,12 +9,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.awt.Color;
 
 /**
- * @author xt449 / BinaryBanana
+ * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
 public class PlayerListener implements Listener {
 
@@ -24,7 +28,7 @@ public class PlayerListener implements Listener {
 
 		if(!AccountLinking.hasLink(player.getUniqueId())) {
 			sendLinkingMessage(player);
-		} else if(DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+		} else if(DiscordBot.jda.getUserById(AccountLinking.getLink(player.getUniqueId())) == null) {
 			sendRejoinMessage(player);
 		}
 	}
@@ -38,7 +42,7 @@ public class PlayerListener implements Listener {
 				sendLinkingMessage(player);
 			}
 		} else {
-			final User user = DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId()));
+			final User user = DiscordBot.jda.getUserById(AccountLinking.getLink(player.getUniqueId()));
 			if(user == null) {
 				sendRejoinMessage(player);
 			} else {
@@ -60,7 +64,7 @@ public class PlayerListener implements Listener {
 			sendLinkingMessage(player);
 
 			event.setCancelled(true);
-		} else if(DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+		} else if(DiscordBot.jda.getUserById(AccountLinking.getLink(player.getUniqueId())) == null) {
 			sendRejoinMessage(player);
 
 			event.setCancelled(true);
@@ -81,7 +85,7 @@ public class PlayerListener implements Listener {
 					event.setCancelled(true);
 				}
 			}
-		} else if(DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+		} else if(DiscordBot.jda.getUserById(AccountLinking.getLink(player.getUniqueId())) == null) {
 			final Location to = event.getTo();
 			if(to != null) {
 				final Location from = event.getFrom();
@@ -102,7 +106,7 @@ public class PlayerListener implements Listener {
 			sendLinkingMessage(player);
 
 			event.setCancelled(true);
-		} else if(DiscordBot.jda.getUserById(AccountLinking.getDiscordLink(player.getUniqueId())) == null) {
+		} else if(DiscordBot.jda.getUserById(AccountLinking.getLink(player.getUniqueId())) == null) {
 			sendRejoinMessage(player);
 
 			event.setCancelled(true);
