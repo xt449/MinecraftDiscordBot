@@ -6,7 +6,7 @@
 
     <groupId>com.github.xt449</groupId>
     <artifactId>minecraftdiscordbot</artifactId>
-    <version>${minecraft.version}-1.0.2</version>
+    <version>${minecraft.version}-1.0.3</version>
     <name>MinecraftDiscordBot</name>
 
     <properties>
