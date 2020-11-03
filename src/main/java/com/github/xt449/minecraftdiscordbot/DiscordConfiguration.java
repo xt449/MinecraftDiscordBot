@@ -12,11 +12,13 @@ class DiscordConfiguration extends AbstractConfiguration {
 	private final String path_inviteLink = "invite link";
 	private final String path_commandPrefix = "command prefix";
 	private final String path_guildId = "guild id";
+	private final String path_roleId = "role id";
 
 	String token;
 	String inviteLink;
 	String commandPrefix;
 	long guildID;
+	long roleID;
 
 	DiscordConfiguration(Plugin plugin) {
 		super(plugin, "discord.yml");
@@ -28,5 +30,6 @@ class DiscordConfiguration extends AbstractConfiguration {
 		inviteLink = config.getString(path_inviteLink);
 		commandPrefix = config.getString(path_commandPrefix);
 		guildID = config.getLong(path_guildId);
+		roleID = config.getLong(path_roleId);
 	}
 }

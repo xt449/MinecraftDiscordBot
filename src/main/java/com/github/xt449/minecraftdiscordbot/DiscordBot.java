@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -22,21 +23,25 @@ import java.util.UUID;
  */
 public abstract class DiscordBot {
 
-	static long guildId;
+	static JDA jda;
+
 	static String inviteLink;
 	static String commandPrefix;
-	static JDA jda;
+	static long guildId;
 	static Guild guild;
+	static long roleId;
+	static Role role;
 
-	static void initialize(String token, long guildId, String inviteLink, String commandPrefix) {
-		DiscordBot.guildId = guildId;
-		DiscordBot.inviteLink = inviteLink;
-		DiscordBot.commandPrefix = commandPrefix;
+	static void initialize(DiscordConfiguration configuration) {
+		DiscordBot.inviteLink = configuration.inviteLink;
+		DiscordBot.commandPrefix = configuration.commandPrefix;
+		DiscordBot.guildId = configuration.guildID;
+		DiscordBot.roleId = configuration.roleID;
 
 		final String version = Bukkit.getBukkitVersion();
 
 		try {
-			jda = JDABuilder.createDefault(token)
+			jda = JDABuilder.createDefault(configuration.token)
 					.enableIntents(GatewayIntent.GUILD_MEMBERS)
 					.setMemberCachePolicy(MemberCachePolicy.ALL)
 					.addEventListeners(listener)
@@ -58,6 +63,7 @@ public abstract class DiscordBot {
 		}
 
 		guild = jda.getGuildById(guildId);
+		role = guild.getRoleById(roleId);
 	}
 
 	private static final ListenerAdapter listener = new ListenerAdapter() {

@@ -15,7 +15,7 @@ public class MinecraftDiscordBot extends JavaPlugin implements Listener {
 	public void onLoad() {
 		final DiscordConfiguration config = new DiscordConfiguration(this);
 		config.initialize();
-		DiscordBot.initialize(config.token, config.guildID, config.inviteLink, config.commandPrefix);
+		DiscordBot.initialize(config);
 	}
 
 	@Override

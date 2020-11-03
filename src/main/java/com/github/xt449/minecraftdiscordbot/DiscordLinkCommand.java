@@ -31,6 +31,9 @@ abstract class DiscordLinkCommand {
 
 		if(AccountLinking.finishLinking(player.getUniqueId(), event.getAuthor().getId())) {
 			event.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("Your Discord and Minecraft accounts have been linked.").queue());
+			if(DiscordBot.role != null) {
+				DiscordBot.guild.addRoleToMember(DiscordBot.guild.getMember(event.getAuthor()), DiscordBot.role).queue();
+			}
 			player.sendMessage(ChatColor.GREEN + "Your Discord and Minecraft accounts have been linked.");
 		}
 	}
