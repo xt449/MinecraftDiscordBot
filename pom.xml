@@ -10,7 +10,7 @@
     <name>MinecraftDiscordBot</name>
 
     <properties>
-        <minecraft.version>1.16.3</minecraft.version>
+        <minecraft.version>1.16.4</minecraft.version>
     </properties>
 
     <repositories>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.github.xt449</groupId>
             <artifactId>spigotutilitylibrary</artifactId>
-            <version>${minecraft.version}-4.3.1</version>
+            <version>1.16.3-4.3.1</version>
             <scope>compile</scope>
         </dependency>
 
