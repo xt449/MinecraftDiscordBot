@@ -114,10 +114,18 @@ public class PlayerListener implements Listener {
 	}
 
 	private void sendLinkingMessage(Player player) {
-		player.sendMessage(ChatColor.YELLOW + "To begin linking your Discord and Minecraft accounts, join the Discord server @ " + ChatColor.AQUA + DiscordBot.inviteLink + ChatColor.YELLOW + " and then run the command " + ChatColor.AQUA + "/link <discord username#tag>" + ChatColor.GRAY + "\n(ie: /link xt449#8551)");
+		if(DiscordBot.inviteLink.length() > 0) {
+			player.sendMessage(ChatColor.YELLOW + "To begin linking your Discord and Minecraft accounts, join the Discord server via " + ChatColor.AQUA + DiscordBot.inviteLink + ChatColor.YELLOW + " and then run the Minecraft command " + ChatColor.AQUA + "/link <discord tag>" + ChatColor.GRAY + "\n(ie: /link xt449#8551)");
+		} else {
+			player.sendMessage(ChatColor.YELLOW + "To begin linking your Discord and Minecraft accounts, join the Discord server and then run the Minecraft command " + ChatColor.AQUA + "/link <discord tag>" + ChatColor.GRAY + "\n(ie: /link xt449#8551)");
+		}
 	}
 
 	private void sendRejoinMessage(Player player) {
-		player.sendMessage(ChatColor.RED + "Your linked Discord account is not in the server!\nPlease rejoin the Discord server @ " + ChatColor.AQUA + DiscordBot.inviteLink + ChatColor.YELLOW + " to regain access");
+		if(DiscordBot.inviteLink.length() > 0) {
+			player.sendMessage(ChatColor.YELLOW + "Your linked Discord account is not in the server! Rejoin the Discord server via " + ChatColor.AQUA + DiscordBot.inviteLink + ChatColor.YELLOW + " to regain access");
+		} else {
+			player.sendMessage(ChatColor.YELLOW + "Your linked Discord account is not in the server! Rejoin the Discord server to regain access");
+		}
 	}
 }

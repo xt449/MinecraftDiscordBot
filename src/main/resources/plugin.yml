@@ -17,7 +17,7 @@ commands:
   link:
     aliases: [pair]
     description: Link your Minecraft and Discord accounts.
-    usage: /<command> <discord username#tag>
+    usage: /<command> <discord tag>
     permission: minecraftdiscordbot.command.link
   whois:
     aliases: [who]
